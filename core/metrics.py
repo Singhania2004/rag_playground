@@ -39,8 +39,41 @@ def judge_response(question: str, context_chunks: list[str], answer: str) -> dic
     return scores
 
 
-def run_pipeline_with_metrics(pipeline, question: str) -> dict:
-    """Run one pipeline on one question and attach latency + LLM-judged quality scores."""
+def compute_retrieval_metrics(retrieved_docs, expected_chunk_ids) -> dict:
+    """Ground-truth retrieval metrics. Compares each pipeline's retrieved chunk_ids
+    against the chunk_id(s) an eval question was actually generated from.
+
+    - recall_at_k: fraction of the expected chunks that were retrieved at all
+    - precision_at_k: fraction of retrieved chunks that were actually relevant
+    - mrr: reciprocal rank of the first relevant chunk retrieved (0 if none found)
+    """
+    if not expected_chunk_ids:
+        return {"recall_at_k": None, "precision_at_k": None, "mrr": None}
+
+    retrieved_ids = [d.metadata.get("chunk_id") for d in retrieved_docs]
+    expected_set = set(expected_chunk_ids)
+    hits = set(retrieved_ids) & expected_set
+
+    recall = len(hits) / len(expected_set)
+    precision = len(hits) / len(retrieved_ids) if retrieved_ids else 0.0
+
+    mrr = 0.0
+    for rank, cid in enumerate(retrieved_ids, start=1):
+        if cid in expected_set:
+            mrr = 1.0 / rank
+            break
+
+    return {
+        "recall_at_k": round(recall, 2),
+        "precision_at_k": round(precision, 2),
+        "mrr": round(mrr, 2),
+    }
+
+
+def run_pipeline_with_metrics(pipeline, question: str, expected_chunk_ids=None, category=None) -> dict:
+    """Run one pipeline on one question and attach latency, LLM-judged quality scores,
+    and (if ground-truth chunk ids are available) real retrieval metrics.
+    """
     start = time.time()
     result = pipeline.run(question)
     latency = time.time() - start
@@ -48,14 +81,17 @@ def run_pipeline_with_metrics(pipeline, question: str) -> dict:
     judge_scores = judge_response(
         question, [c.page_content for c in result["chunks"]], result["answer"]
     )
+    retrieval_scores = compute_retrieval_metrics(result["chunks"], expected_chunk_ids)
 
     return {
         "pipeline": pipeline.name,
         "question": question,
+        "category": category,
         "answer": result["answer"],
         "chunks": result["chunks"],
         "extras": {k: v for k, v in result.items() if k not in ("chunks", "answer", "num_llm_calls")},
         "latency_sec": round(latency, 2),
         "num_llm_calls": result.get("num_llm_calls", 1),
         **judge_scores,
+        **retrieval_scores,
     }

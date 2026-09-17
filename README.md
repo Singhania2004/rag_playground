@@ -34,16 +34,16 @@ rag_lab/
 ├── app.py                  # Streamlit UI (single question + batch eval tabs)
 ├── config.py                # model names, chunk size, top-k, etc.
 ├── data/
-│   ├── sample_doc.txt        # long sample document (space exploration history)
-│   └── eval_questions.json   # fixed question set for batch evaluation
+│   └── sample_doc.txt         # short sample document (swap for your own long doc)
 └── core/
-    ├── document_loader.py    # chunking
-    ├── vectorstore.py        # Chroma + local embeddings
-    ├── bm25_retriever.py     # keyword search for hybrid retrieval
-    ├── reranker.py            # cross-encoder reranking
-    ├── llm.py                 # Groq wrapper: rewrite / HyDE / multi-query / generate
-    ├── pipelines.py            # the actual RAG variants — start here
-    └── metrics.py              # LLM-judge scoring + latency tracking
+    ├── document_loader.py     # chunking
+    ├── vectorstore.py         # Chroma + local embeddings
+    ├── bm25_retriever.py      # keyword search for hybrid retrieval
+    ├── reranker.py             # cross-encoder reranking
+    ├── llm.py                  # Groq wrapper: rewrite / HyDE / multi-query / generate
+    ├── pipelines.py             # the actual RAG variants — start here
+    ├── eval_generator.py        # auto-generates ground-truth eval questions per chunk
+    └── metrics.py                # LLM-judge scoring + retrieval metrics + latency
 ```
 
 **`core/pipelines.py`** is the most important file — every technique is a small class
@@ -64,16 +64,40 @@ read what each variant actually does differently, and easy to add a new one.
 
 ## Metrics
 
-Each run reports three LLM-judged scores (1-5, via Groq) plus latency and LLM call count:
-
+**LLM-judged (every run, single question or batch):**
 - **Faithfulness** — is the answer actually supported by the retrieved context (no hallucination)?
 - **Answer relevance** — does the answer address the question that was asked?
 - **Context relevance** — is what got retrieved actually relevant, or mostly noise?
 
-The Batch Evaluation tab runs all selected pipelines over `data/eval_questions.json` and
-shows the *average* scores per pipeline — this is where you actually see, e.g., hybrid
-search winning on a keyword-heavy question or multi-query winning on a fact buried deep
-in one paragraph, while naive RAG lags behind.
+**Ground-truth retrieval metrics (batch mode only, via the generated eval set):**
+- **Recall@k** — of the chunk(s) a question was actually generated from, how many did retrieval find?
+- **Precision@k** — of what got retrieved, how much was actually relevant?
+- **MRR** — how high up the ranking was the first relevant chunk?
+
+### Generating an unbiased eval set (Batch Evaluation tab)
+
+Rather than hand-writing eval questions (easy to accidentally bias toward whichever
+pipeline you like), the Batch Evaluation tab generates them straight from your loaded
+document's chunks via the LLM, across four deliberately different categories so no
+single pipeline wins by construction:
+
+| Category | Tests | Should favor |
+|---|---|---|
+| `lexical` | question reuses the chunk's own wording | Hybrid / BM25 |
+| `paraphrased` | question uses different vocabulary, same meaning | Dense / Reranker |
+| `vague` | short, underspecified, conversational phrasing | Query Rewrite / HyDE |
+| `multi_hop` | needs two separate chunks combined to answer | Hybrid / Multi-Query / Reranker |
+
+Because each generated question records exactly which `chunk_id`(s) it came from, batch
+results include real Recall/Precision/MRR, not just LLM-judged scores — and the
+category breakdown table shows which pipeline wins on which *kind* of difficulty,
+instead of collapsing everything into one "best overall" number, which is usually the
+more honest way to present RAG comparisons.
+
+Use a longer, denser document for this — the more plausible-looking distractor chunks
+in the corpus, the more naive RAG's weaknesses (especially on `multi_hop` and `vague`)
+actually show up. `data/sample_doc.txt` is intentionally short; swap in your own via
+the sidebar's "Upload your own" option for a real stress test.
 
 ## Extending it
 
