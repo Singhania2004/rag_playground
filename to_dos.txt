@@ -1,0 +1,2 @@
+no of token used as a metric
+change no of chunks n chunk overlap

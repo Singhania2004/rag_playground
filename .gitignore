@@ -1,0 +1,6 @@
+venv_rag_lab/
+__pycache__/
+*.pyc
+*.pth
+core/__pycache__/
+.env

@@ -1,0 +1,158 @@
+A History and Overview of Space Exploration
+
+Introduction
+
+Space exploration is the ongoing effort by humanity to study outer space using both
+crewed spacecraft and uncrewed robotic probes. It spans scientific research, national
+prestige, military strategy, and, increasingly, commercial enterprise. This document
+traces its history from early theoretical foundations through the Cold War space race,
+the era of robotic exploration, the age of human spaceflight, and into the modern
+commercial and international era, before looking ahead at planned future missions.
+
+Early Theoretical Foundations
+
+Long before any object left Earth's atmosphere, scientists and engineers laid the
+groundwork for spaceflight. The Russian schoolteacher Konstantin Tsiolkovsky published
+foundational work on rocket propulsion in 1903, deriving what is now known as the
+rocket equation, which relates a rocket's change in velocity to the exhaust velocity of
+its engines and the ratio of its initial to final mass. In the United States, Robert
+Goddard built and successfully launched the world's first liquid-fueled rocket on March
+16, 1926, from a farm in Auburn, Massachusetts. The rocket flew for only about two and a
+half seconds and reached a height of roughly 12 meters, but it proved that liquid
+propellants were a viable alternative to solid-fuel rockets. In Germany, Hermann Oberth
+published theoretical work in the 1920s that influenced a generation of engineers,
+including Wernher von Braun, who would later lead the team that developed the V-2
+rocket during the Second World War and subsequently became a central figure in the
+American space program.
+
+The Cold War Space Race
+
+The launch of Sputnik 1 by the Soviet Union on October 4, 1957, marked the beginning of
+the space age. Sputnik 1 was a simple aluminum sphere about 58 centimeters in diameter,
+carrying a radio transmitter that beeped continuously as it orbited Earth roughly every
+96 minutes. Its launch shocked the American public and government, triggering what
+became known as the "Sputnik crisis" and accelerating investment in science education
+and rocketry in the United States. In response, the United States created NASA, the
+National Aeronautics and Space Administration, which was formally established on July
+29, 1958, absorbing the earlier National Advisory Committee for Aeronautics.
+
+The Soviet Union continued to lead in the early years of the space race. On April 12,
+1961, cosmonaut Yuri Gagarin became the first human to travel into space and orbit
+Earth, completing a single orbit aboard Vostok 1 in 108 minutes. Less than a month
+later, on May 5, 1961, Alan Shepard became the first American in space aboard a Mercury
+capsule, though his flight was suborbital. On June 16, 1963, Soviet cosmonaut Valentina
+Tereshkova became the first woman in space, orbiting Earth 48 times aboard Vostok 6.
+
+The race culminated in the American Apollo program. On July 20, 1969, Apollo 11
+astronauts Neil Armstrong and Buzz Aldrin became the first humans to walk on the Moon,
+while Michael Collins remained in lunar orbit aboard the command module. Armstrong's
+first words upon stepping onto the lunar surface, "That's one small step for man, one
+giant leap for mankind," became one of the most quoted phrases of the twentieth
+century. Five more crewed landings followed through Apollo 17 in December 1972, after
+which no humans have returned to the lunar surface, though several space agencies have
+announced plans to do so within the current decade.
+
+The Era of Robotic Exploration
+
+While crewed missions captured public attention, uncrewed probes achieved some of the
+most scientifically significant milestones in space exploration. The Soviet Venera
+program successfully landed probes on the surface of Venus, with Venera 7 becoming, in
+December 1970, the first spacecraft to transmit data from the surface of another
+planet. Venus's surface proved to be extraordinarily hostile, with surface temperatures
+around 465 degrees Celsius and atmospheric pressure roughly 90 times that of Earth,
+causing early landers to survive only a matter of minutes to hours.
+
+NASA's twin Voyager probes, launched in 1977, took advantage of a rare planetary
+alignment to conduct a "grand tour" of the outer solar system, flying past Jupiter,
+Saturn, Uranus, and Neptune. Voyager 1 is now the most distant human-made object from
+Earth and, in August 2012, became the first spacecraft to enter interstellar space,
+having crossed the heliopause where the influence of the solar wind gives way to the
+interstellar medium. Both Voyager probes continue to transmit data using their
+radioisotope thermoelectric generators, though NASA expects to lose contact with them
+sometime in the 2030s as their power output continues to decline.
+
+Mars has been a particularly popular target for robotic exploration. NASA's Viking 1
+and Viking 2 landers, which touched down in 1976, were the first American spacecraft to
+successfully land on Mars and conduct experiments searching for evidence of microbial
+life, though the results were inconclusive. Decades later, a series of increasingly
+sophisticated rovers followed: Sojourner in 1997, Spirit and Opportunity in 2004,
+Curiosity in 2012, and Perseverance in February 2021. Perseverance carried with it a
+small robotic helicopter named Ingenuity, which on April 19, 2021, completed the first
+powered, controlled flight by an aircraft on another planet, a feat once considered
+extremely difficult given the thinness of the Martian atmosphere, which is less than 1
+percent as dense as Earth's at the surface.
+
+The Space Shuttle and Space Stations
+
+NASA's Space Shuttle program operated from 1981 to 2011, flying 135 missions using a
+partially reusable spacecraft design intended to make access to orbit routine and
+comparatively inexpensive. The program suffered two catastrophic accidents: Challenger
+broke apart 73 seconds after launch on January 28, 1986, due to the failure of an
+O-ring seal in cold weather, killing all seven crew members including schoolteacher
+Christa McAuliffe; and Columbia disintegrated during re-entry on February 1, 2003, after
+damage to its heat shield sustained during launch, again killing all seven aboard. These
+accidents led to significant redesigns of shuttle safety procedures and, ultimately,
+to the program's retirement in 2011 in favor of commercial crew transport.
+
+In parallel with the shuttle program, humanity maintained a continuous presence in low
+Earth orbit through space stations. The Soviet Union launched the first space station,
+Salyut 1, in 1971, followed by the Mir space station in 1986, which remained in
+operation until 2001. The International Space Station, a collaboration primarily
+between the United States, Russia, Europe, Japan, and Canada, has been continuously
+occupied since November 2, 2000, making it the longest continuous human presence in
+space. It orbits Earth at an altitude of roughly 400 kilometers, completing an orbit
+approximately every 90 minutes.
+
+The Rise of Commercial Spaceflight
+
+The twenty-first century has seen a dramatic shift toward commercial participation in
+spaceflight, a trend often referred to as "NewSpace." SpaceX, founded by Elon Musk in
+2002, became the first private company to launch, orbit, and recover a spacecraft when
+its Dragon capsule returned safely to Earth in December 2010. In May 2020, SpaceX's
+Crew Dragon capsule carried NASA astronauts to the International Space Station, marking
+the first crewed orbital launch from American soil since the retirement of the Space
+Shuttle in 2011 and the first orbital human spaceflight by a private company. SpaceX
+also pioneered the routine reuse of orbital-class rocket boosters with its Falcon 9
+vehicle, first successfully landing a booster after an orbital launch in December 2015.
+
+Other companies have also reshaped the industry. Blue Origin, founded by Jeff Bezos in
+2000, has focused on reusable suborbital and orbital vehicles, while Virgin Galactic has
+concentrated on suborbital space tourism. These companies, alongside a growing number of
+smaller launch providers, have significantly reduced the cost of reaching orbit compared
+to the government-dominated era of spaceflight, opening the door to satellite
+mega-constellations, private space stations, and more ambitious commercial ventures.
+
+International Cooperation and Competition
+
+Space exploration today reflects both cooperation and competition among nations. The
+International Space Station stands as a landmark example of cooperation, having hosted
+astronauts from over twenty countries. At the same time, national space programs
+continue to compete on prestige projects. China's National Space Administration has
+rapidly expanded its capabilities, landing the Chang'e 4 probe on the far side of the
+Moon in January 2019, the first spacecraft ever to do so, and completing its own
+Tiangong space station in orbit by the end of 2022. India's space agency, ISRO, achieved
+a significant milestone in August 2023 when its Chandrayaan-3 mission became the first
+to land near the Moon's south pole, a region of particular interest due to suspected
+water ice deposits that could support future crewed missions.
+
+The Future of Space Exploration
+
+Several major initiatives are shaping the coming decades of space exploration. NASA's
+Artemis program aims to return astronauts to the lunar surface, including the first
+woman and the first person of color to walk on the Moon, as a stepping stone toward
+eventual crewed missions to Mars. The program relies on the Space Launch System rocket
+and the Orion crew capsule, along with commercial lunar landers developed by companies
+including SpaceX. Beyond the Moon, robotic missions continue to probe the outer solar
+system and beyond: the James Webb Space Telescope, launched in December 2021, has
+already returned unprecedented images of distant galaxies and exoplanet atmospheres,
+while missions such as Europa Clipper, launched in October 2024, aim to study Jupiter's
+icy moon Europa for signs of a subsurface ocean that could potentially harbor life.
+
+Longer-term ambitions include permanent lunar bases, crewed missions to Mars, and the
+continued search for life beyond Earth, whether through the study of exoplanet
+atmospheres, the search for biosignatures on Mars, or exploration of icy moons such as
+Europa and Saturn's moon Enceladus, both of which are believed to harbor liquid water
+oceans beneath their surfaces. Whatever form it takes, the next chapter of space
+exploration is likely to involve an increasingly complex mix of government agencies,
+international partnerships, and commercial companies working both together and in
+competition, much as it always has.
