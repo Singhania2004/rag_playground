@@ -96,20 +96,22 @@ more honest way to present RAG comparisons.
 
 Use a longer, denser document for this — the more plausible-looking distractor chunks
 in the corpus, the more naive RAG's weaknesses (especially on `multi_hop` and `vague`)
-actually show up. `data/sample_doc.txt` is intentionally short; swap in your own via
-the sidebar's "Upload your own" option for a real stress test.
+actually show up. 
 
-## Extending it
+## Cost control
 
-- **Add a new pipeline**: subclass `BasePipeline` in `core/pipelines.py`, implement
-  `run()`, add it to `PIPELINE_REGISTRY`. It'll automatically show up in the sidebar.
-- **Add retrieval-only metrics** (recall@k, MRR): you'll need labeled "relevant chunk
-  ids" per question — add an `expected_chunk_ids` field to `eval_questions.json` and a
-  new function in `core/metrics.py`.
-- **Swap in RAGAS**: for a more rigorous eval suite, `pip install ragas` and replace
-  `judge_response()` in `core/metrics.py` with RAGAS's `faithfulness` /
-  `answer_relevancy` / `context_precision` metrics — they use the same LLM-judge idea
-  but are more battle-tested.
-- **Try a different document**: use the "Upload your own" option in the sidebar, or
-  swap out `data/sample_doc.txt`. Longer, more repetitive/technical documents tend to
-  show bigger gaps between naive RAG and the enhanced pipelines.
+Two Groq models are used, not one:
+
+- **`GROQ_MODEL`** (default `openai/gpt-oss-120b`) — only for final answer generation, where quality matters most.
+- **`GROQ_HELPER_MODEL`** (default `openai/gpt-oss-20b`) — for everything else: query rewriting, HyDE, multi-query generation, LLM-judge scoring, and eval-question generation. These are simple tasks; a small fast model does fine, and the judge call alone roughly doubles context-token usage per pipeline-question pair, so this split matters more than anything else for cost.
+
+Every result reports `pipeline_tokens` (what the technique would actually cost in production) separately from `judge_tokens` (evaluation overhead), plus a total. There's also a **⚡ Fast mode** toggle in the sidebar's advanced settings that skips the LLM judge entirely and only computes retrieval metrics — useful while you're tuning top-k/candidate-pool settings, before spending tokens on a final scored run.
+
+## Tuning the gap between pipelines
+
+Sidebar → **⚙️ Advanced retrieval settings** exposes:
+- **Top-k chunks retrieved** — lower = harder retrieval task = bigger visible gap.
+- **Candidate pool size** (for reranker / hybrid+rerank) — higher = reranker has more to work with, especially on multi-hop questions where a needed chunk might rank outside the top-k on dense similarity alone but still be recoverable further down.
+
+After a batch run, the category breakdown table flags any category where every pipeline scored about the same (near-zero spread) — that category isn't teaching you anything that run, so consider weighting the eval-set generation counts away from it next time
+

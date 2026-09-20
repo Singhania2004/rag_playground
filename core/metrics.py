@@ -1,7 +1,7 @@
 import json
 import time
 
-from core.llm import get_llm
+from core.llm import invoke_llm, reset_token_tracker, get_token_usage
 
 JUDGE_PROMPT = """You are evaluating a RAG (Retrieval-Augmented Generation) system's output.
 Be strict and objective.
@@ -26,11 +26,9 @@ Respond with ONLY valid JSON in this exact format, no other text, no markdown fe
 
 
 def judge_response(question: str, context_chunks: list[str], answer: str) -> dict:
-    llm = get_llm()
     context = "\n\n".join(context_chunks) if context_chunks else "(no context retrieved)"
     prompt = JUDGE_PROMPT.format(question=question, context=context, answer=answer)
-    response = llm.invoke(prompt)
-    text = response.content.strip()
+    text = invoke_llm(prompt, use_helper_model=True)
     text = text.replace("```json", "").replace("```", "").strip()
     try:
         scores = json.loads(text)
@@ -70,17 +68,29 @@ def compute_retrieval_metrics(retrieved_docs, expected_chunk_ids) -> dict:
     }
 
 
-def run_pipeline_with_metrics(pipeline, question: str, expected_chunk_ids=None, category=None) -> dict:
-    """Run one pipeline on one question and attach latency, LLM-judged quality scores,
-    and (if ground-truth chunk ids are available) real retrieval metrics.
+def run_pipeline_with_metrics(
+    pipeline, question: str, expected_chunk_ids=None, category=None, skip_judge: bool = False
+) -> dict:
+    """Run one pipeline on one question and attach latency, token usage, real
+    retrieval metrics (if ground truth available), and LLM-judged quality scores
+    (unless skip_judge is set, for fast/cheap iteration).
     """
+    reset_token_tracker()
     start = time.time()
     result = pipeline.run(question)
     latency = time.time() - start
+    pipeline_tokens = get_token_usage()["total_tokens"]
 
-    judge_scores = judge_response(
-        question, [c.page_content for c in result["chunks"]], result["answer"]
-    )
+    if skip_judge:
+        judge_scores = {"faithfulness": None, "answer_relevance": None, "context_relevance": None}
+        judge_tokens = 0
+    else:
+        reset_token_tracker()
+        judge_scores = judge_response(
+            question, [c.page_content for c in result["chunks"]], result["answer"]
+        )
+        judge_tokens = get_token_usage()["total_tokens"]
+
     retrieval_scores = compute_retrieval_metrics(result["chunks"], expected_chunk_ids)
 
     return {
@@ -92,6 +102,9 @@ def run_pipeline_with_metrics(pipeline, question: str, expected_chunk_ids=None, 
         "extras": {k: v for k, v in result.items() if k not in ("chunks", "answer", "num_llm_calls")},
         "latency_sec": round(latency, 2),
         "num_llm_calls": result.get("num_llm_calls", 1),
+        "pipeline_tokens": pipeline_tokens,
+        "judge_tokens": judge_tokens,
+        "total_tokens": pipeline_tokens + judge_tokens,
         **judge_scores,
         **retrieval_scores,
     }

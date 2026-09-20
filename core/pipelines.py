@@ -27,11 +27,14 @@ class BasePipeline:
     name = "base"
     description = ""
 
-    def __init__(self, vectorstore, bm25_retriever=None):
+    def __init__(self, vectorstore, bm25_retriever=None, top_k=TOP_K_RETRIEVE, top_k_candidates=TOP_K_RERANK_CANDIDATES):
         self.vectorstore = vectorstore
         self.bm25_retriever = bm25_retriever
+        self.top_k = top_k
+        self.top_k_candidates = top_k_candidates
 
-    def dense_retrieve(self, query, k=TOP_K_RETRIEVE):
+    def dense_retrieve(self, query, k=None):
+        k = k or self.top_k
         return self.vectorstore.similarity_search(query, k=k)
 
     def run(self, question: str) -> dict:
@@ -44,7 +47,7 @@ class NaiveRAG(BasePipeline):
     description = "Embed the raw query, take top-k chunks, stuff into the prompt. The baseline."
 
     def run(self, question):
-        chunks = self.dense_retrieve(question, k=TOP_K_RETRIEVE)
+        chunks = self.dense_retrieve(question)
         answer = generate_answer(question, [c.page_content for c in chunks])
         return {"chunks": chunks, "answer": answer, "num_llm_calls": 1}
 
@@ -55,7 +58,7 @@ class QueryRewriteRAG(BasePipeline):
 
     def run(self, question):
         rewritten = rewrite_query(question)
-        chunks = self.dense_retrieve(rewritten, k=TOP_K_RETRIEVE)
+        chunks = self.dense_retrieve(rewritten)
         answer = generate_answer(question, [c.page_content for c in chunks])
         return {
             "chunks": chunks,
@@ -70,9 +73,9 @@ class HybridRAG(BasePipeline):
     description = "Combine keyword search (BM25) and dense embedding search via reciprocal rank fusion."
 
     def run(self, question):
-        dense_chunks = self.dense_retrieve(question, k=TOP_K_RETRIEVE)
-        bm25_chunks = self.bm25_retriever.retrieve(question, k=TOP_K_RETRIEVE)
-        merged = reciprocal_rank_fusion([dense_chunks, bm25_chunks])[:TOP_K_RETRIEVE]
+        dense_chunks = self.dense_retrieve(question)
+        bm25_chunks = self.bm25_retriever.retrieve(question, k=self.top_k)
+        merged = reciprocal_rank_fusion([dense_chunks, bm25_chunks])[: self.top_k]
         answer = generate_answer(question, [c.page_content for c in merged])
         return {"chunks": merged, "answer": answer, "num_llm_calls": 1}
 
@@ -82,8 +85,8 @@ class RerankRAG(BasePipeline):
     description = "Retrieve a wide candidate set, then re-score with a cross-encoder for precision."
 
     def run(self, question):
-        candidates = self.dense_retrieve(question, k=TOP_K_RERANK_CANDIDATES)
-        reranked = rerank(question, candidates, top_k=TOP_K_RETRIEVE)
+        candidates = self.dense_retrieve(question, k=self.top_k_candidates)
+        reranked = rerank(question, candidates, top_k=self.top_k)
         answer = generate_answer(question, [c.page_content for c in reranked])
         return {"chunks": reranked, "answer": answer, "num_llm_calls": 1}
 
@@ -94,7 +97,7 @@ class HyDERAG(BasePipeline):
 
     def run(self, question):
         hypothetical = generate_hypothetical_answer(question)
-        chunks = self.dense_retrieve(hypothetical, k=TOP_K_RETRIEVE)
+        chunks = self.dense_retrieve(hypothetical)
         answer = generate_answer(question, [c.page_content for c in chunks])
         return {
             "chunks": chunks,
@@ -113,11 +116,11 @@ class MultiQueryRAG(BasePipeline):
         all_chunks = []
         seen = set()
         for q in queries + [question]:
-            for c in self.dense_retrieve(q, k=TOP_K_RETRIEVE):
+            for c in self.dense_retrieve(q):
                 if c.page_content not in seen:
                     seen.add(c.page_content)
                     all_chunks.append(c)
-        top_chunks = all_chunks[:TOP_K_RETRIEVE]
+        top_chunks = all_chunks[: self.top_k]
         answer = generate_answer(question, [c.page_content for c in top_chunks])
         return {
             "chunks": top_chunks,
@@ -132,10 +135,10 @@ class HybridRerankRAG(BasePipeline):
     description = "BM25 + dense fusion for wide recall, then cross-encoder reranking for precision."
 
     def run(self, question):
-        dense_chunks = self.dense_retrieve(question, k=TOP_K_RERANK_CANDIDATES)
-        bm25_chunks = self.bm25_retriever.retrieve(question, k=TOP_K_RERANK_CANDIDATES)
+        dense_chunks = self.dense_retrieve(question, k=self.top_k_candidates)
+        bm25_chunks = self.bm25_retriever.retrieve(question, k=self.top_k_candidates)
         merged = reciprocal_rank_fusion([dense_chunks, bm25_chunks])
-        reranked = rerank(question, merged, top_k=TOP_K_RETRIEVE)
+        reranked = rerank(question, merged, top_k=self.top_k)
         answer = generate_answer(question, [c.page_content for c in reranked])
         return {"chunks": reranked, "answer": answer, "num_llm_calls": 1}
 

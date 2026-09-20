@@ -1,7 +1,7 @@
 import json
 import random
 
-from core.llm import get_llm
+from core.llm import invoke_llm
 
 MIN_CHUNK_LEN = 200  # skip chunks too short/uninformative to write a real question from
 
@@ -65,10 +65,9 @@ def _parse_json(text: str):
 
 
 def _generate_single(chunk_doc, category: str):
-    llm = get_llm()
     prompt = SINGLE_HOP_PROMPTS[category].format(chunk=chunk_doc.page_content)
-    response = llm.invoke(prompt)
-    parsed = _parse_json(response.content)
+    text = invoke_llm(prompt, use_helper_model=True)
+    parsed = _parse_json(text)
     if not parsed or "question" not in parsed:
         return None
     return {
@@ -80,10 +79,9 @@ def _generate_single(chunk_doc, category: str):
 
 
 def _generate_multi(chunk_a, chunk_b):
-    llm = get_llm()
     prompt = MULTI_HOP_PROMPT.format(chunk_a=chunk_a.page_content, chunk_b=chunk_b.page_content)
-    response = llm.invoke(prompt)
-    parsed = _parse_json(response.content)
+    text = invoke_llm(prompt, use_helper_model=True)
+    parsed = _parse_json(text)
     if not parsed or "question" not in parsed:
         return None
     return {
