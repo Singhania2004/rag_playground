@@ -1,2 +1,0 @@
-works for any parsed input 
-default input is metamorphos
