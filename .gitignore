@@ -5,3 +5,4 @@ __pycache__/
 core/__pycache__/
 .env
 data/
+to_dos.txt
