@@ -4,5 +4,4 @@ __pycache__/
 *.pth
 core/__pycache__/
 .env
-data/
 to_dos.txt
