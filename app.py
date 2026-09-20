@@ -85,7 +85,7 @@ pipeline_labels = {k: v.name for k, v in PIPELINE_REGISTRY.items()}
 selected = st.sidebar.multiselect(
     "Choose strategies",
     options=list(pipeline_labels.keys()),
-    default=["naive", "hybrid", "rerank", "hybrid_rerank"],
+    default=["naive", "rerank", "hybrid_rerank"],
     format_func=lambda k: pipeline_labels[k],
 )
 for key in selected:
@@ -146,9 +146,9 @@ with tab_batch:
 
     c1, c2, c3, c4 = st.columns(4)
     n_lexical = c1.number_input("Lexical", min_value=0, max_value=15, value=3)
-    n_paraphrased = c2.number_input("Paraphrased", min_value=0, max_value=15, value=5)
-    n_vague = c3.number_input("Vague", min_value=0, max_value=15, value=5)
-    n_multi_hop = c4.number_input("Multi-hop", min_value=0, max_value=15, value=5)
+    n_paraphrased = c2.number_input("Paraphrased", min_value=0, max_value=15, value=3)
+    n_vague = c3.number_input("Vague", min_value=0, max_value=15, value=3)
+    n_multi_hop = c4.number_input("Multi-hop", min_value=0, max_value=15, value=3)
     st.caption(
         "Lexical questions tend to score 1.0 recall for every pipeline — they don't "
         "discriminate much. Weighting toward vague/multi-hop shows a bigger spread."

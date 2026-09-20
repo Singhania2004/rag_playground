@@ -10,6 +10,10 @@ relevance, context relevance) and latency/cost tracking for each.
 (cross-encoder), Chroma as an in-memory vector store, and Groq for LLM calls
 (free tier).
 
+## 🌐 Live Demo
+
+https://ragplayground.streamlit.app/
+
 ## Setup
 
 ```bash
