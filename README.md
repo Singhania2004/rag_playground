@@ -10,6 +10,8 @@ relevance, context relevance) and latency/cost tracking for each.
 (cross-encoder), Chroma as an in-memory vector store, and Groq for LLM calls
 (free tier).
 
+<img width="1915" height="906" alt="Screenshot 2026-09-17 181603" src="https://github.com/user-attachments/assets/d16cd217-4c32-4e1b-8751-3f5bd8df5c99" />
+
 ## 🌐 Live Demo
 
 https://ragplayground.streamlit.app/
@@ -101,6 +103,8 @@ more honest way to present RAG comparisons.
 Use a longer, denser document for this — the more plausible-looking distractor chunks
 in the corpus, the more naive RAG's weaknesses (especially on `multi_hop` and `vague`)
 actually show up. 
+
+<img width="1917" height="847" alt="Screenshot 2026-09-17 181625" src="https://github.com/user-attachments/assets/f2fa85fa-d04e-4458-81d1-2b00a9226883" />
 
 ## Cost control
 
